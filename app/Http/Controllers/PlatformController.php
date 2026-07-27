@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PaymentIntent;
 use App\Models\Tenant;
 use App\Services\AuditLogger;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -108,7 +109,7 @@ class PlatformController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Tenant $tenant, AuditLogger $audit): \Illuminate\Http\RedirectResponse
+    public function updateStatus(Request $request, Tenant $tenant, AuditLogger $audit): RedirectResponse
     {
         $this->authorizePlatform($request);
         $validated = $request->validate([

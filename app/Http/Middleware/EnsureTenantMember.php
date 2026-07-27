@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Tenant;
 use App\Models\AuditLog;
+use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

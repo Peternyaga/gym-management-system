@@ -10,9 +10,9 @@ use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Validation\Rule;
 
 class ScheduleController extends Controller
 {
@@ -56,6 +56,7 @@ class ScheduleController extends Controller
                 ]);
             }
             $start = now()->parse($data['starts_at'])->utc();
+
             return ClassInstance::query()->create([
                 'tenant_id' => $tenant->id,
                 'location_id' => $tenant->locations()->where('is_active', true)->value('id'),

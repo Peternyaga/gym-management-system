@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Membership;
 use App\Models\MembershipPlan;
 use App\Models\Tenant;
 use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Validation\Rule;
 
 class PlanController extends Controller
 {
@@ -60,9 +61,9 @@ class PlanController extends Controller
         return Inertia::render('tenant/plan-detail', [
             'plan' => $record,
             'usage' => [
-                'total' => \App\Models\Membership::query()->where('tenant_id', $tenant->id)
+                'total' => Membership::query()->where('tenant_id', $tenant->id)
                     ->where('plan_id', $record->id)->count(),
-                'active' => \App\Models\Membership::query()->where('tenant_id', $tenant->id)
+                'active' => Membership::query()->where('tenant_id', $tenant->id)
                     ->where('plan_id', $record->id)->whereIn('status', ['active', 'grace', 'paused'])->count(),
             ],
         ]);
@@ -90,7 +91,7 @@ class PlanController extends Controller
     public function destroy(Request $request, Tenant $tenant, string $plan, AuditLogger $audit): RedirectResponse
     {
         $record = MembershipPlan::query()->where('tenant_id', $tenant->id)->whereKey($plan)->firstOrFail();
-        $hasMemberships = \App\Models\Membership::query()->where('tenant_id', $tenant->id)->where('plan_id', $record->id)->exists();
+        $hasMemberships = Membership::query()->where('tenant_id', $tenant->id)->where('plan_id', $record->id)->exists();
         if ($hasMemberships) {
             $before = $record->only(['is_active', 'is_public']);
             $record->update(['is_active' => false, 'is_public' => false]);
